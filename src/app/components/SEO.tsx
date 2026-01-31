@@ -17,7 +17,7 @@ export default function SEO({
     ogImage = '/og-image.png',
     canonical,
 }: SEOProps) {
-    const siteUrl = 'https://coastaldeltaresponse.com'; // Update with actual domain
+    const siteUrl = 'https://coastalcysec.vercel.app';
     const fullTitle = title.includes('Coastal Delta Response') ? title : `${title} | Coastal Delta Response`;
 
     return (
