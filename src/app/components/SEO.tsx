@@ -52,7 +52,7 @@ export default function SEO({
             {/* Canonical URL */}
             {canonical && <link rel="canonical" href={canonical} />}
 
-            {/* Structured Data - Organization */}
+            {/* Structured Data - Organization with UNISSULA Association */}
             <script type="application/ld+json">
                 {JSON.stringify({
                     '@context': 'https://schema.org',
@@ -75,6 +75,36 @@ export default function SEO({
                         postalCode: '50112',
                         addressCountry: 'ID',
                     },
+                    about: {
+                        '@type': 'CollegeOrUniversity',
+                        name: 'Universitas Islam Sultan Agung',
+                        alternateName: 'UNISSULA',
+                        url: 'https://unissula.ac.id',
+                        address: {
+                            '@type': 'PostalAddress',
+                            addressLocality: 'Semarang',
+                            addressRegion: 'Jawa Tengah',
+                            addressCountry: 'ID',
+                        },
+                    },
+                    keywords: 'cybersecurity, CSIRT, incident response, UNISSULA, Semarang, academic research, prototype',
+                })}
+            </script>
+
+            {/* Additional Structured Data - Research Project Context */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'ResearchProject',
+                    name: 'Coastal Delta Response - Cybersecurity CSIRT Prototype',
+                    description: 'Academic cybersecurity incident response prototype developed in the context of higher education research at Universitas Islam Sultan Agung (UNISSULA)',
+                    url: siteUrl,
+                    about: {
+                        '@type': 'Thing',
+                        name: 'Cybersecurity Incident Response',
+                        description: 'CSIRT prototype for academic and research purposes',
+                    },
+                    keywords: 'CSIRT UNISSULA, cybersecurity research, incident response prototype, academic cybersecurity',
                 })}
             </script>
         </Helmet>

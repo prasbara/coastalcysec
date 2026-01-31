@@ -189,6 +189,69 @@ export default function AboutPage() {
               </p>
             </div>
           </section>
+
+          {/* Academic Context Section - UNISSULA Association */}
+          <section className="pt-16 border-t border-border">
+            <h2
+              className="text-3xl mb-6 text-foreground"
+              style={{ fontFamily: 'var(--font-serif)' }}
+            >
+              Academic Context & Research Initiative
+            </h2>
+            <div
+              className="prose prose-lg max-w-none text-muted-foreground space-y-4"
+              style={{ fontFamily: 'var(--font-sans)' }}
+            >
+              <p className="leading-relaxed">
+                Coastal Delta Response is developed as a <strong className="text-foreground">cybersecurity
+                  incident response prototype</strong> within the context of higher education research and
+                academic innovation at <strong className="text-foreground">Universitas Islam Sultan Agung
+                  (UNISSULA)</strong>, Semarang, Indonesia.
+              </p>
+              <p className="leading-relaxed">
+                This initiative represents an academic exploration of CSIRT (Computer Security Incident
+                Response Team) frameworks, incident response methodologies, and cybersecurity best practices
+                grounded in rigorous research and continuous learning within a university ecosystem.
+              </p>
+
+              {/* Disclaimer Box */}
+              <div className="mt-6 p-6 bg-muted/30 border-l-4 border-border rounded-r">
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  <strong className="text-foreground">Important Notice:</strong> This website serves as
+                  a research prototype and academic case study. It is <strong>not an official institutional
+                    portal</strong> of Universitas Islam Sultan Agung (UNISSULA). The project is developed
+                  independently within an academic research context to explore cybersecurity incident
+                  response frameworks and methodologies.
+                </p>
+              </div>
+
+              <div className="mt-8">
+                <h3 className="text-xl mb-4 text-foreground" style={{ fontFamily: 'var(--font-serif)' }}>
+                  Research Focus Areas
+                </h3>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li className="leading-relaxed">
+                    — CSIRT framework development and implementation in higher education contexts
+                  </li>
+                  <li className="leading-relaxed">
+                    — Cybersecurity incident response procedures aligned with international standards
+                  </li>
+                  <li className="leading-relaxed">
+                    — Integration of academic rigor with practical cybersecurity operations
+                  </li>
+                  <li className="leading-relaxed">
+                    — Continuous research on emerging threats and mitigation strategies
+                  </li>
+                </ul>
+              </div>
+
+              <p className="leading-relaxed mt-6">
+                The location at <strong className="text-foreground">Jl. Kaligawe Raya No.Km.4, Genuk,
+                  Semarang</strong> reflects the geographical context of this research initiative within
+                the broader academic ecosystem of Central Java's higher education landscape.
+              </p>
+            </div>
+          </section>
         </div>
       </article>
     </div>
