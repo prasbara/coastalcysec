@@ -44,16 +44,11 @@ This project is optimized for deployment on:
 - GitHub Pages
 - Any static hosting service
 
-## 📍 Location
-
-Located at Jl. Kaligawe Raya No.Km.4, Terboyo Kulon, Kec. Genuk, Kota Semarang, Jawa Tengah 50112
-
 ## 🔍 SEO Keywords
 
 - Cybersecurity consultation
 - Incident response
 - Security services
-- UNISSULA, Semarang, Kaligawe
 - Keamanan siber
 
 ## 📄 License
