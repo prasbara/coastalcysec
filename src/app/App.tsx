@@ -11,9 +11,10 @@ import AdvisoryPage from '@/app/components/AdvisoryPage';
 import FAQPage from '@/app/components/FAQPage';
 import ContactPage from '@/app/components/ContactPage';
 import PrivacyPage from '@/app/components/PrivacyPage';
+import CaseStudyPage from '@/app/components/CaseStudyPage';
 
 
-type PageType = 'home' | 'about' | 'services' | 'report' | 'incident-types' | 'procedures' | 'security-guide' | 'advisory' | 'faq' | 'contact' | 'privacy';
+type PageType = 'home' | 'about' | 'services' | 'report' | 'incident-types' | 'procedures' | 'security-guide' | 'advisory' | 'faq' | 'contact' | 'privacy' | 'case-study';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
@@ -33,6 +34,7 @@ export default function App() {
     { id: 'incident-types' as PageType, label: 'Incident Types' },
     { id: 'procedures' as PageType, label: 'Procedures' },
     { id: 'security-guide' as PageType, label: 'Security Guide' },
+    { id: 'case-study' as PageType, label: 'Case Study' },
     { id: 'faq' as PageType, label: 'FAQ' },
     { id: 'privacy' as PageType, label: 'Privacy Policy' },
   ];
@@ -61,6 +63,8 @@ export default function App() {
         return <ContactPage />;
       case 'privacy':
         return <PrivacyPage />;
+      case 'case-study':
+        return <CaseStudyPage />;
       default:
         return <HomePage onNavigate={setCurrentPage} />;
     }
