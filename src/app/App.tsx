@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import HomePage from '@/app/components/HomePage';
 import AboutPage from '@/app/components/AboutPage';
 import ServicesPage from '@/app/components/ServicesPage';
@@ -18,29 +18,49 @@ import CaseStudyUNISSULAPage from '@/app/components/CaseStudyUNISSULAPage';
 
 type PageType = 'home' | 'about' | 'services' | 'report' | 'incident-types' | 'procedures' | 'security-guide' | 'advisory' | 'faq' | 'contact' | 'privacy' | 'case-study' | 'case-study-feb' | 'case-study-unissula';
 
+interface MenuItem {
+  id?: PageType;
+  label: string;
+  highlight?: boolean;
+  submenu?: { id: PageType; label: string }[];
+}
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  const menuItems = [
-    { id: 'home' as PageType, label: 'Home' },
-    { id: 'about' as PageType, label: 'Documentation' },
-    { id: 'advisory' as PageType, label: 'Advisory' },
-    { id: 'services' as PageType, label: 'Governance' },
-    { id: 'report' as PageType, label: 'Report Incident', highlight: true },
-    { id: 'contact' as PageType, label: 'Contact' },
-  ];
-
-  // Additional menu items for mobile only
-  const additionalMenuItems = [
-    { id: 'incident-types' as PageType, label: 'Incident Types' },
-    { id: 'procedures' as PageType, label: 'Procedures' },
-    { id: 'security-guide' as PageType, label: 'Security Guide' },
-    { id: 'case-study' as PageType, label: 'Case Study: Farmasi' },
-    { id: 'case-study-feb' as PageType, label: 'Case Study: FEB' },
-    { id: 'case-study-unissula' as PageType, label: 'Case Study: UNISSULA' },
-    { id: 'faq' as PageType, label: 'FAQ' },
-    { id: 'privacy' as PageType, label: 'Privacy Policy' },
+  // Main navigation structure with dropdowns
+  const menuItems: MenuItem[] = [
+    { id: 'home', label: 'Home' },
+    {
+      label: 'Services',
+      submenu: [
+        { id: 'advisory', label: 'Advisory' },
+        { id: 'services', label: 'Governance' },
+        { id: 'incident-types', label: 'Incident Types' },
+        { id: 'procedures', label: 'Procedures' },
+        { id: 'security-guide', label: 'Security Guide' },
+      ]
+    },
+    { id: 'about', label: 'Documentation' },
+    {
+      label: 'Case Studies',
+      submenu: [
+        { id: 'case-study', label: 'Farmasi UNISSULA' },
+        { id: 'case-study-feb', label: 'FEB UNISSULA' },
+        { id: 'case-study-unissula', label: 'UNISSULA Main' },
+      ]
+    },
+    { id: 'report', label: 'Report Incident', highlight: true },
+    {
+      label: 'About',
+      submenu: [
+        { id: 'faq', label: 'FAQ' },
+        { id: 'privacy', label: 'Privacy Policy' },
+      ]
+    },
+    { id: 'contact', label: 'Contact' },
   ];
 
   const renderPage = () => {
@@ -101,25 +121,63 @@ export default function App() {
               </div>
             </div>
 
-            {/* Desktop Navigation - Text Only */}
+            {/* Desktop Navigation with Dropdowns */}
             <nav className="hidden lg:flex items-center gap-8">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setCurrentPage(item.id);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`text-sm transition-colors ${item.highlight
-                    ? 'text-foreground underline decoration-2 underline-offset-4'
-                    : currentPage === item.id
-                      ? 'text-foreground'
-                      : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  style={{ fontFamily: 'var(--font-sans)' }}
-                >
-                  {item.label}
-                </button>
+              {menuItems.map((item, index) => (
+                <div key={index} className="relative">
+                  {item.submenu ? (
+                    <div
+                      className="relative"
+                      onMouseEnter={() => setOpenDropdown(item.label)}
+                      onMouseLeave={() => setOpenDropdown(null)}
+                    >
+                      <button
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                        style={{ fontFamily: 'var(--font-sans)' }}
+                      >
+                        {item.label}
+                        <ChevronDown className="h-3 w-3" />
+                      </button>
+                      {openDropdown === item.label && (
+                        <div className="absolute top-full left-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg py-2 z-50">
+                          {item.submenu.map((subItem) => (
+                            <button
+                              key={subItem.id}
+                              onClick={() => {
+                                setCurrentPage(subItem.id);
+                                setOpenDropdown(null);
+                              }}
+                              className={`block w-full text-left px-4 py-2 text-sm transition-colors ${currentPage === subItem.id
+                                  ? 'text-foreground bg-muted/50'
+                                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
+                                }`}
+                              style={{ fontFamily: 'var(--font-sans)' }}
+                            >
+                              {subItem.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        if (item.id) {
+                          setCurrentPage(item.id);
+                        }
+                      }}
+                      className={`text-sm transition-colors ${item.highlight
+                          ? 'text-foreground underline decoration-2 underline-offset-4'
+                          : currentPage === item.id
+                            ? 'text-foreground'
+                            : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                      style={{ fontFamily: 'var(--font-sans)' }}
+                    >
+                      {item.label}
+                    </button>
+                  )}
+                </div>
               ))}
             </nav>
 
@@ -132,25 +190,60 @@ export default function App() {
             </button>
           </div>
 
-          {/* Mobile Navigation */}
+          {/* Mobile Navigation with Accordion */}
           {mobileMenuOpen && (
-            <nav className="lg:hidden pt-6 pb-2 space-y-3 border-t border-border mt-6">
-              {[...menuItems, ...additionalMenuItems].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setCurrentPage(item.id);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`block w-full text-left text-sm transition-colors ${item.highlight
-                    ? 'text-foreground underline'
-                    : currentPage === item.id
-                      ? 'text-foreground'
-                      : 'text-muted-foreground'
-                    }`}
-                >
-                  {item.label}
-                </button>
+            <nav className="lg:hidden pt-6 pb-2 space-y-2 border-t border-border mt-6">
+              {menuItems.map((item, index) => (
+                <div key={index}>
+                  {item.submenu ? (
+                    <div>
+                      <button
+                        onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
+                        className="flex items-center justify-between w-full text-left text-sm text-muted-foreground py-2"
+                      >
+                        <span>{item.label}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === item.label ? 'rotate-180' : ''}`} />
+                      </button>
+                      {openDropdown === item.label && (
+                        <div className="pl-4 space-y-2 mt-2">
+                          {item.submenu.map((subItem) => (
+                            <button
+                              key={subItem.id}
+                              onClick={() => {
+                                setCurrentPage(subItem.id);
+                                setMobileMenuOpen(false);
+                                setOpenDropdown(null);
+                              }}
+                              className={`block w-full text-left text-sm py-1 transition-colors ${currentPage === subItem.id
+                                  ? 'text-foreground'
+                                  : 'text-muted-foreground'
+                                }`}
+                            >
+                              {subItem.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        if (item.id) {
+                          setCurrentPage(item.id);
+                        }
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`block w-full text-left text-sm py-2 transition-colors ${item.highlight
+                          ? 'text-foreground underline'
+                          : currentPage === item.id
+                            ? 'text-foreground'
+                            : 'text-muted-foreground'
+                        }`}
+                    >
+                      {item.label}
+                    </button>
+                  )}
+                </div>
               ))}
             </nav>
           )}
