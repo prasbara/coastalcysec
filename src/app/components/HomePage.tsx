@@ -20,7 +20,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <div className="inline-block mb-12">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span className="w-1.5 h-1.5 bg-foreground rounded-full"></span>
-                Service Status: Active (On Develop for any Mitigation for Response)
+                Service Status: Active (Mitigation and response measures are currently under development)
               </div>
             </div>
 
