@@ -44,10 +44,36 @@ export default function SEO({
             <meta property="twitter:image" content={ogImage} />
 
             {/* Additional Meta Tags */}
-            <meta name="robots" content="index, follow" />
+            <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
             <meta name="language" content="English" />
             <meta name="revisit-after" content="7 days" />
             <meta name="author" content="Coastal Delta Response" />
+            <meta name="publisher" content="Coastal Delta Response" />
+
+            {/* Geo Location Tags */}
+            <meta name="geo.region" content="ID-JT" />
+            <meta name="geo.placename" content="Semarang" />
+            <meta name="geo.position" content="-6.9667;110.4167" />
+            <meta name="ICBM" content="-6.9667, 110.4167" />
+
+            {/* Mobile Optimization */}
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+            <meta name="mobile-web-app-capable" content="yes" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+            <meta name="apple-mobile-web-app-title" content="CoastalCySec" />
+
+            {/* Theme Color */}
+            <meta name="theme-color" content="#000000" />
+            <meta name="msapplication-TileColor" content="#000000" />
+
+            {/* Additional Open Graph */}
+            <meta property="og:locale" content="en_US" />
+            <meta property="og:locale:alternate" content="id_ID" />
+
+            {/* Security Headers (meta equivalent) */}
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
             {/* Canonical URL */}
             {canonical && <link rel="canonical" href={canonical} />}
@@ -105,6 +131,44 @@ export default function SEO({
                         description: 'CSIRT prototype for academic and research purposes',
                     },
                     keywords: 'CSIRT UNISSULA, cybersecurity research, incident response prototype, academic cybersecurity',
+                })}
+            </script>
+
+            {/* WebSite Schema with Sitelinks Searchbox */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'WebSite',
+                    name: 'Coastal Delta Response',
+                    alternateName: 'CoastalCySec',
+                    url: siteUrl,
+                    description: 'Professional cybersecurity consultation and incident response services',
+                    inLanguage: ['en', 'id'],
+                    potentialAction: {
+                        '@type': 'SearchAction',
+                        target: {
+                            '@type': 'EntryPoint',
+                            urlTemplate: `${siteUrl}/?s={search_term_string}`,
+                        },
+                        'query-input': 'required name=search_term_string',
+                    },
+                })}
+            </script>
+
+            {/* ProfessionalService Schema */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'ProfessionalService',
+                    name: 'Coastal Delta Response',
+                    description: 'Cybersecurity consultation and incident response services',
+                    url: siteUrl,
+                    areaServed: {
+                        '@type': 'Country',
+                        name: 'Indonesia',
+                    },
+                    serviceType: ['Cybersecurity Consultation', 'Incident Response', 'Security Assessment', 'Vulnerability Analysis'],
+                    priceRange: 'Contact for pricing',
                 })}
             </script>
         </Helmet>
