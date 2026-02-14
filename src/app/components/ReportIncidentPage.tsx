@@ -14,8 +14,73 @@ export default function ReportIncidentPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Form submission logic would go here
-    alert('Thank you. Your incident report has been received. Our team will respond shortly.');
+
+    // 1. Validate required fields
+    if (!formData.incidentType || !formData.severity || !formData.description) {
+      alert("Please fill in all required fields (Incident Type, Severity, Incident Description).");
+      return;
+    }
+
+    // Validate Reporter Information unless anonymous
+    if (!formData.anonymous) {
+      if (!formData.reporterName || !formData.reporterEmail) {
+        alert("Reporter Information (Name and Email) is required unless 'Submit anonymously' is checked.");
+        return;
+      }
+    }
+
+    // 2. Prepare data based on anonymous status
+    const reporterName = formData.anonymous ? "ANONYMOUS REPORTER" : formData.reporterName;
+    const reporterEmail = formData.anonymous ? "Not Provided" : formData.reporterEmail;
+    const reporterPhone = formData.anonymous ? "Not Provided" : (formData.reporterPhone || "Not Provided");
+
+    // 3. Format Email Body
+    const subject = `[INCIDENT REPORT] - ${formData.incidentType} - ${formData.severity}`;
+
+    const body = `=== INCIDENT REPORT SUBMISSION ===
+
+Reporter Information:
+Full Name: ${reporterName}
+Email: ${reporterEmail}
+Phone: ${reporterPhone}
+
+Incident Details:
+Incident Type: ${formData.incidentType}
+Severity Level: ${formData.severity}
+Affected Systems: ${formData.affectedSystems || "Not Specified"}
+
+Incident Description:
+${formData.description}
+
+Report Submitted At:
+${new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })}
+
+====================================`;
+
+    // 4. Send formatted report (simulate via mailto)
+    const mailtoLink = `mailto:biasalahbuka@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    try {
+      window.location.href = mailtoLink;
+
+      // 5. Success response
+      alert("Your incident report has been successfully submitted.");
+
+      // Optional: Reset form
+      setFormData({
+        reporterName: '',
+        reporterEmail: '',
+        reporterPhone: '',
+        incidentType: '',
+        severity: '',
+        description: '',
+        affectedSystems: '',
+        anonymous: false
+      });
+    } catch (error) {
+      // Failure response
+      alert("There was an error submitting your report. Please try again.");
+    }
   };
 
   return (
@@ -28,7 +93,7 @@ export default function ReportIncidentPage() {
         </nav>
 
         {/* Page Title */}
-        <h1 
+        <h1
           className="text-5xl lg:text-6xl leading-tight mb-8 text-foreground"
           style={{ fontFamily: 'var(--font-serif)' }}
         >
@@ -36,23 +101,23 @@ export default function ReportIncidentPage() {
         </h1>
 
         {/* Lead Paragraph */}
-        <p 
+        <p
           className="text-xl leading-relaxed text-foreground/80 mb-12 border-l-2 border-border pl-6"
           style={{ fontFamily: 'var(--font-serif)' }}
         >
-          If you have discovered or suspect a cybersecurity incident, please report it 
+          If you have discovered or suspect a cybersecurity incident, please report it
           immediately using this form. All reports are treated with strict confidentiality.
         </p>
 
         {/* Important Notice */}
         <div className="mb-16 p-6 border border-border bg-card">
-          <h2 
+          <h2
             className="text-xl mb-4 text-foreground"
             style={{ fontFamily: 'var(--font-serif)' }}
           >
             Important Information
           </h2>
-          <ul 
+          <ul
             className="space-y-2 text-sm text-muted-foreground"
             style={{ fontFamily: 'var(--font-sans)' }}
           >
@@ -67,16 +132,16 @@ export default function ReportIncidentPage() {
         <form onSubmit={handleSubmit} className="space-y-12">
           {/* Reporter Information */}
           <section>
-            <h2 
+            <h2
               className="text-2xl mb-6 text-foreground"
               style={{ fontFamily: 'var(--font-serif)' }}
             >
               Reporter Information
             </h2>
-            
+
             <div className="space-y-6">
               <div>
-                <label 
+                <label
                   htmlFor="reporterName"
                   className="block text-sm mb-2 text-foreground"
                   style={{ fontFamily: 'var(--font-sans)' }}
@@ -87,7 +152,7 @@ export default function ReportIncidentPage() {
                   type="text"
                   id="reporterName"
                   value={formData.reporterName}
-                  onChange={(e) => setFormData({...formData, reporterName: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, reporterName: e.target.value })}
                   className="w-full px-4 py-3 border border-border bg-background text-foreground focus:outline-none focus:border-foreground transition-colors"
                   style={{ fontFamily: 'var(--font-sans)' }}
                   disabled={formData.anonymous}
@@ -95,7 +160,7 @@ export default function ReportIncidentPage() {
               </div>
 
               <div>
-                <label 
+                <label
                   htmlFor="reporterEmail"
                   className="block text-sm mb-2 text-foreground"
                   style={{ fontFamily: 'var(--font-sans)' }}
@@ -106,7 +171,7 @@ export default function ReportIncidentPage() {
                   type="email"
                   id="reporterEmail"
                   value={formData.reporterEmail}
-                  onChange={(e) => setFormData({...formData, reporterEmail: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, reporterEmail: e.target.value })}
                   className="w-full px-4 py-3 border border-border bg-background text-foreground focus:outline-none focus:border-foreground transition-colors"
                   style={{ fontFamily: 'var(--font-sans)' }}
                   disabled={formData.anonymous}
@@ -114,7 +179,7 @@ export default function ReportIncidentPage() {
               </div>
 
               <div>
-                <label 
+                <label
                   htmlFor="reporterPhone"
                   className="block text-sm mb-2 text-foreground"
                   style={{ fontFamily: 'var(--font-sans)' }}
@@ -125,7 +190,7 @@ export default function ReportIncidentPage() {
                   type="tel"
                   id="reporterPhone"
                   value={formData.reporterPhone}
-                  onChange={(e) => setFormData({...formData, reporterPhone: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, reporterPhone: e.target.value })}
                   className="w-full px-4 py-3 border border-border bg-background text-foreground focus:outline-none focus:border-foreground transition-colors"
                   style={{ fontFamily: 'var(--font-sans)' }}
                   disabled={formData.anonymous}
@@ -137,10 +202,10 @@ export default function ReportIncidentPage() {
                   type="checkbox"
                   id="anonymous"
                   checked={formData.anonymous}
-                  onChange={(e) => setFormData({...formData, anonymous: e.target.checked})}
+                  onChange={(e) => setFormData({ ...formData, anonymous: e.target.checked })}
                   className="w-4 h-4 border border-border"
                 />
-                <label 
+                <label
                   htmlFor="anonymous"
                   className="text-sm text-muted-foreground cursor-pointer"
                   style={{ fontFamily: 'var(--font-sans)' }}
@@ -153,7 +218,7 @@ export default function ReportIncidentPage() {
 
           {/* Incident Details */}
           <section className="pt-12 border-t border-border">
-            <h2 
+            <h2
               className="text-2xl mb-6 text-foreground"
               style={{ fontFamily: 'var(--font-serif)' }}
             >
@@ -162,7 +227,7 @@ export default function ReportIncidentPage() {
 
             <div className="space-y-6">
               <div>
-                <label 
+                <label
                   htmlFor="incidentType"
                   className="block text-sm mb-2 text-foreground"
                   style={{ fontFamily: 'var(--font-sans)' }}
@@ -172,7 +237,7 @@ export default function ReportIncidentPage() {
                 <select
                   id="incidentType"
                   value={formData.incidentType}
-                  onChange={(e) => setFormData({...formData, incidentType: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, incidentType: e.target.value })}
                   className="w-full px-4 py-3 border border-border bg-background text-foreground focus:outline-none focus:border-foreground transition-colors"
                   style={{ fontFamily: 'var(--font-sans)' }}
                   required
@@ -190,7 +255,7 @@ export default function ReportIncidentPage() {
               </div>
 
               <div>
-                <label 
+                <label
                   htmlFor="severity"
                   className="block text-sm mb-2 text-foreground"
                   style={{ fontFamily: 'var(--font-sans)' }}
@@ -200,7 +265,7 @@ export default function ReportIncidentPage() {
                 <select
                   id="severity"
                   value={formData.severity}
-                  onChange={(e) => setFormData({...formData, severity: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
                   className="w-full px-4 py-3 border border-border bg-background text-foreground focus:outline-none focus:border-foreground transition-colors"
                   style={{ fontFamily: 'var(--font-sans)' }}
                   required
@@ -214,7 +279,7 @@ export default function ReportIncidentPage() {
               </div>
 
               <div>
-                <label 
+                <label
                   htmlFor="affectedSystems"
                   className="block text-sm mb-2 text-foreground"
                   style={{ fontFamily: 'var(--font-sans)' }}
@@ -225,7 +290,7 @@ export default function ReportIncidentPage() {
                   type="text"
                   id="affectedSystems"
                   value={formData.affectedSystems}
-                  onChange={(e) => setFormData({...formData, affectedSystems: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, affectedSystems: e.target.value })}
                   placeholder="e.g., portal.unissula.ac.id, email server, specific computer"
                   className="w-full px-4 py-3 border border-border bg-background text-foreground focus:outline-none focus:border-foreground transition-colors placeholder:text-muted-foreground/50"
                   style={{ fontFamily: 'var(--font-sans)' }}
@@ -233,7 +298,7 @@ export default function ReportIncidentPage() {
               </div>
 
               <div>
-                <label 
+                <label
                   htmlFor="description"
                   className="block text-sm mb-2 text-foreground"
                   style={{ fontFamily: 'var(--font-sans)' }}
@@ -243,7 +308,7 @@ export default function ReportIncidentPage() {
                 <textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={8}
                   placeholder="Please provide a detailed description of the incident, including when it was discovered, what was observed, and any actions already taken..."
                   className="w-full px-4 py-3 border border-border bg-background text-foreground focus:outline-none focus:border-foreground transition-colors placeholder:text-muted-foreground/50 resize-none"
@@ -264,7 +329,7 @@ export default function ReportIncidentPage() {
               Submit Incident Report
             </button>
             <p className="mt-4 text-xs text-muted-foreground">
-              By submitting this report, you acknowledge that the information provided is accurate 
+              By submitting this report, you acknowledge that the information provided is accurate
               to the best of your knowledge.
             </p>
           </section>
