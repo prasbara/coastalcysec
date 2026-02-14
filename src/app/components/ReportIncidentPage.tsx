@@ -12,12 +12,16 @@ export default function ReportIncidentPage() {
     anonymous: false
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     // 1. Validate required fields
     if (!formData.incidentType || !formData.severity || !formData.description) {
       alert("Please fill in all required fields (Incident Type, Severity, Incident Description).");
+      setIsSubmitting(false);
       return;
     }
 
@@ -25,6 +29,7 @@ export default function ReportIncidentPage() {
     if (!formData.anonymous) {
       if (!formData.reporterName || !formData.reporterEmail) {
         alert("Reporter Information (Name and Email) is required unless 'Submit anonymously' is checked.");
+        setIsSubmitting(false);
         return;
       }
     }
@@ -37,7 +42,8 @@ export default function ReportIncidentPage() {
     // 3. Format Email Body
     const subject = `[INCIDENT REPORT] - ${formData.incidentType} - ${formData.severity}`;
 
-    const body = `=== INCIDENT REPORT SUBMISSION ===
+    // Detailed body for the email content
+    const message = `=== INCIDENT REPORT SUBMISSION ===
 
 Reporter Information:
 Full Name: ${reporterName}
@@ -57,16 +63,31 @@ ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })}
 
 ====================================`;
 
-    // 4. Send formatted report (simulate via mailto)
-    const mailtoLink = `mailto:biasalahbuka@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
     try {
-      window.location.href = mailtoLink;
+      // 4. Send via API
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          recipientEmail: 'biasalahbuka@gmail.com', // Target email
+          subject: subject,
+          message: message,
+          reporterEmail: formData.anonymous ? undefined : formData.reporterEmail
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send report');
+      }
 
       // 5. Success response
-      alert("Your incident report has been successfully submitted.");
+      alert("Your incident report has been successfully submitted. Reference ID: " + (data.messageId || 'N/A'));
 
-      // Optional: Reset form
+      // Reset form
       setFormData({
         reporterName: '',
         reporterEmail: '',
@@ -77,9 +98,11 @@ ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })}
         affectedSystems: '',
         anonymous: false
       });
-    } catch (error) {
-      // Failure response
-      alert("There was an error submitting your report. Please try again.");
+    } catch (error: any) {
+      console.error('Submission Error:', error);
+      alert(`There was an error submitting your report: ${error.message}. Please try again or contact support.`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -323,10 +346,11 @@ ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })}
           <section className="pt-12 border-t border-border">
             <button
               type="submit"
-              className="w-full md:w-auto px-12 py-4 bg-foreground text-background hover:bg-foreground/90 transition-colors text-sm tracking-wide"
+              disabled={isSubmitting}
+              className={`w-full md:w-auto px-12 py-4 bg-foreground text-background hover:bg-foreground/90 transition-colors text-sm tracking-wide ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
               style={{ fontFamily: 'var(--font-sans)' }}
             >
-              Submit Incident Report
+              {isSubmitting ? 'Submitting Report...' : 'Submit Incident Report'}
             </button>
             <p className="mt-4 text-xs text-muted-foreground">
               By submitting this report, you acknowledge that the information provided is accurate
